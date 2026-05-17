@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Esat Seyhan Tüzer – Portfolyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0f0a;
+      --bg2: #0f170f;
+      --bg3: #141f14;
+      --surface: #1a271a;
+      --surface2: #1f301f;
+      --green: #39d353;
+      --green-dim: #2aab41;
+      --green-muted: #1a5c2a;
+      --green-faint: #0d2e14;
+      --text: #d4e8d4;
+      --text-muted: #7aab7a;
+      --text-dim: #4a784a;
+      --accent: #5dfc76;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Syne', sans-serif;
+      --radius: 4px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--green-muted); border-radius: 3px; }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(10, 15, 10, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--green-muted);
+    }
+
+    .nav-logo {
+      font-family: var(--sans);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo span { color: var(--text-muted); font-weight: 400; }
+
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--green);
+      transition: width 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 100px 40px; max-width: 1000px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--green-muted);
+      max-width: 60px;
+    }
+
+    h1, h2, h3 { font-family: var(--sans); }
+
+    /* ─── HERO ─── */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 80px;
+      position: relative;
+    }
+
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(57,211,83,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57,211,83,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse at 30% 50%, black 30%, transparent 70%);
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      color: var(--green);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s forwards;
+    }
+
+    .hero-eyebrow::before { content: '> '; color: var(--text-dim); }
+
+    .hero-name {
+      font-family: var(--sans);
+      font-size: clamp(48px, 8vw, 88px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -3px;
+      color: var(--text);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.35s forwards;
+    }
+
+    .hero-name .highlight { color: var(--accent); }
+
+    .hero-subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 480px;
+      line-height: 1.8;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.5s forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.65s forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      border-radius: var(--radius);
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(57,211,83,0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--green);
+      border: 1px solid var(--green-muted);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--green);
+      background: var(--green-faint);
+      transform: translateY(-2px);
+    }
+
+    .hero-status {
+      margin-top: 60px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-dim);
+      opacity: 0;
+      animation: fadeUp 0.6s 0.8s forwards;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    /* ─── ABOUT ─── */
+    #about { padding-top: 120px; }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-top: 40px;
+    }
+
+    .about-text p {
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .about-text p strong { color: var(--text); }
+
+    .about-info { display: flex; flex-direction: column; gap: 24px; }
+
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--green-muted);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .info-card:hover {
+      border-color: var(--green);
+      transform: translateX(4px);
+    }
+
+    .info-card h4 {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--green);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .info-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ─── SKILLS ─── */
+    #skills { padding-top: 40px; }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .skill-group {
+      background: var(--surface);
+      border: 1px solid var(--green-muted);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .skill-group:hover { border-color: var(--green); }
+
+    .skill-group h4 {
+      font-family: var(--sans);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--green);
+      margin-bottom: 14px;
+    }
+
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 2px;
+      background: var(--green-faint);
+      color: var(--text-muted);
+      border: 1px solid var(--green-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── PROJECTS ─── */
+    #projects { padding-top: 40px; }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--green-muted);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .project-card:hover {
+      border-color: var(--green);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+    }
+
+    .project-card:hover::before { opacity: 1; }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .project-icon {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .project-link {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 18px;
+      transition: color 0.2s;
+    }
+
+    .project-link:hover { color: var(--green); }
+
+    .project-card h3 {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .project-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      flex: 1;
+    }
+
+    .project-stack { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    /* ─── CV ─── */
+    #cv {
+      padding-top: 40px;
+    }
+
+    .cv-box {
+      margin-top: 40px;
+      background: var(--surface);
+      border: 1px solid var(--green-muted);
+      border-radius: var(--radius);
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .cv-info h3 {
+      font-family: var(--sans);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .cv-info p { color: var(--text-muted); font-size: 13px; }
+
+    .cv-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ─── CONTACT ─── */
+    #contact { padding-top: 40px; padding-bottom: 140px; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .contact-intro h3 {
+      font-family: var(--sans);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .contact-intro h3 span { color: var(--green); }
+
+    .contact-intro p { color: var(--text-muted); font-size: 13px; }
+
+    .contact-links { display: flex; flex-direction: column; gap: 12px; }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--green-muted);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text);
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .contact-link:hover {
+      border-color: var(--green);
+      background: var(--green-faint);
+      transform: translateX(6px);
+    }
+
+    .contact-link .link-icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .contact-link .link-label { font-size: 11px; color: var(--text-dim); display: block; }
+    .contact-link .link-value { color: var(--text); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--green-muted);
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-dim);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    footer span { color: var(--green); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(57,211,83,0.4); }
+      50%       { opacity: 0.7; box-shadow: 0 0 0 6px rgba(57,211,83,0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* ─── TERMINAL CURSOR ─── */
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.1em;
+      background: var(--green);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+      margin-left: 4px;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 700px) {
+      nav { padding: 14px 20px; }
+      .nav-links { gap: 16px; }
+      section { padding: 80px 20px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .hero-name { letter-spacing: -1px; }
+      .cv-box { flex-direction: column; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#home" class="nav-logo">est<span>.dev</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">hakkımda</a></li>
+      <li><a href="#skills">beceriler</a></li>
+      <li><a href="#projects">projeler</a></li>
+      <li><a href="#cv">cv</a></li>
+      <li><a href="#contact">iletişim</a></li>
+    </ul>
+  </nav>
+
+  <!-- HOME -->
+  <section id="home">
+    <div class="hero-grid-bg"></div>
+    <p class="hero-eyebrow">merhaba, ben</p>
+    <h1 class="hero-name">Esat Seyhan<br><span class="highlight">Tüzer</span></h1>
+    <p class="hero-subtitle">
+      Yazılım geliştirici & sistem analisti adayı.<br>
+      Temiz kod, mantıklı tasarım ve çalışan sistemler üzerine odaklanıyorum.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">→ Projelerimi Gör</a>
+      <a href="#contact" class="btn btn-outline">İletişime Geç</a>
+    </div>
+    <div class="hero-status">
+      <div class="status-dot"></div>
+      Şu an öğrenmeye ve projeye açığım
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label fade-in">01 // hakkımda</p>
+    <div class="about-grid fade-in">
+      <div class="about-text">
+        <p>
+          Merhaba! Ben <strong>Esat Seyhan Tüzer</strong>. İzmir'de yaşıyorum ve
+          Bilgisayar Programcılığı alanında ön lisans eğitimim devam ediyor.
+          Sistem analizi, veritabanı tasarımı ve web geliştirme konularıyla
+          özellikle ilgileniyorum.
+        </p>
+        <p>
+          Kod yazmayı bir problem çözme aracı olarak görüyorum. Projelerimde
+          okunabilir kod ve sürdürülebilir yapı önceliğim.
+        </p>
+        <p>
+          Boş zamanlarımda açık kaynak projeleri inceliyor,
+          teknik blog yazıları okuyorum.
+        </p>
+      </div>
+      <div class="about-info">
+        <div class="info-card">
+          <h4>🎓 Eğitim</h4>
+          <p>Bilgisayar Programcılığı<br>
+          İzmir Ekonomi Üniversitesi — 2024–2026</p>
+        </div>
+        <div class="info-card">
+          <h4>📍 Konum</h4>
+          <p>İzmir, Türkiye</p>
+        </div>
+        <div class="info-card">
+          <h4>🌐 Yabancı Dil</h4>
+          <p>İngilizce — B1</p>
+        </div>
+        <div class="info-card">
+          <h4>💡 İlgi Alanları</h4>
+          <p>Web geliştirme, sistem tasarımı, açık kaynak</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <p class="section-label fade-in">02 // beceriler</p>
+    <div class="skills-grid fade-in">
+      <div class="skill-group">
+        <h4>Programlama</h4>
+        <div class="skill-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Java</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">C</span>
+          <span class="tag">SQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>Web</h4>
+        <div class="skill-tags">
+          <span class="tag">HTML5</span>
+          <span class="tag">CSS3</span>
+          <span class="tag">Bootstrap</span>
+          <span class="tag">Flask</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>Araçlar</h4>
+        <div class="skill-tags">
+          <span class="tag">Git</span>
+          <span class="tag">GitHub</span>
+          <span class="tag">VS Code</span>
+          <span class="tag">Figma</span>
+          <span class="tag">Jira</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>Veritabanı</h4>
+        <div class="skill-tags">
+          <span class="tag">MySQL</span>
+          <span class="tag">SQLite</span>
+          <span class="tag">PostgreSQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>Sistem & Analiz</h4>
+        <div class="skill-tags">
+          <span class="tag">UML</span>
+          <span class="tag">Use Case</span>
+          <span class="tag">ERD</span>
+          <span class="tag">Agile</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>Kişisel</h4>
+        <div class="skill-tags">
+          <span class="tag">Problem Çözme</span>
+          <span class="tag">Takım Çalışması</span>
+          <span class="tag">İletişim</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <p class="section-label fade-in">03 // projeler</p>
+    <div class="projects-grid fade-in">
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-icon">🛒</span>
+          <a href="https://github.com/EsatSeyhanTuzer/Volkswagen-Web-Sitesi-Proje" class="project-link" target="_blank">↗</a>
+        </div>
+        <h3>Volkswagen Web Sitesi</h3>
+        <p>C++ ile geliştirilmiş markanın belirli araçlarını detaylıca listeleyen internet sitesi.</p>
+        <div class="project-stack">
+          <span class="tag">C++</span>
+          <span class="tag">MySQL</span>
+          <span class="tag">HTML/CSS</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-icon">📊</span>
+          <a href="https://github.com/EsatSeyhanTuzer/Arac-Alim-Satim-Sitesi" class="project-link" target="_blank">↗</a>
+        </div>
+        <h3>Araç Alım Satım Sitesi</h3>
+        <p>Sahibinden uygulaması benzeri, Admin paneliyle birlikte hazırlanmış araç alım sitesi.</p>
+        <div class="project-stack">
+          <span class="tag">PHP</span>
+          <span class="tag">MySQL</span>
+          <span class="tag">C#</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-icon">📋</span>
+          <a href="https://github.com/EsatSeyhanTuzer/Arac-bakim-Otomasyonu" class="project-link" target="_blank">↗</a>
+        </div>
+        <h3>Araç Bakım Otomasyonu</h3>
+        <p>Bakıma gelen araçların verilerini saklayan yapılan işlemleri tutan araç bakım otomasyonu.</p>
+        <div class="project-stack">
+          <span class="tag">C#</span>
+          <span class="tag">HTML</span>
+          <span class="tag">CSS</span>
+          <span class="tag">MySQL</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CV -->
+  <section id="cv">
+    <p class="section-label fade-in">04 // cv</p>
+    <div class="cv-box fade-in">
+      <div class="cv-info">
+        <h3>Özgeçmişimi İndir</h3>
+        <p>Türkçe ve İngilizce sürümleri PDF formatında indirilebilir.<br>
+        Güncel sürümler — Mayıs 2026</p>
+      </div>
+      <div class="cv-buttons">
+        <a href="Esat Seyhan Tüzer CV.pdf" class="btn btn-primary" download>↓ Türkçe CV</a>
+        <a href="Esat Seyhan Tüzer ENG CV.pdf" class="btn btn-outline" download>↓ English CV</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-label fade-in">05 // iletişim</p>
+    <div class="contact-grid fade-in">
+      <div class="contact-intro">
+        <h3>Birlikte bir şeyler <span>yapalım</span></h3>
+        <p>
+          Proje teklifleri, iş birliği fırsatları veya sadece merhaba demek için
+          ulaşabilirsiniz. En kısa sürede geri döneceğim.
+        </p>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:esatseyhantuzer@gmail.com" class="contact-link">
+          <span class="link-icon">✉</span>
+          <div>
+            <span class="link-label">e-posta</span>
+            <span class="link-value">esatseyhantuzer@gmail.com</span>
+          </div>
+        </a>
+        <a href="https://www.linkedin.com/in/esatseyhantüzer/" target="_blank" class="contact-link">
+          <span class="link-icon">in</span>
+          <div>
+            <span class="link-label">linkedin</span>
+            <span class="link-value">linkedin.com/in/esatseyhantüzer</span>
+          </div>
+        </a>
+        <a href="https://github.com/EsatSeyhanTuzer" target="_blank" class="contact-link">
+          <span class="link-icon">⌥</span>
+          <div>
+            <span class="link-label">github</span>
+            <span class="link-value">github.com/EsatSeyhanTuzer</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>Esat Seyhan Tüzer</span>
+    <p>© 2026 — Tüm hakları saklıdır</p>
+  </footer>
+
+  <script>
+    // Scroll fade-in
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.1 }
+    );
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Mobile nav toggle (hamburger varsa ekle)
+    // Şimdilik masaüstünde çalışıyor
+  </script>
+</body>
+</html>
